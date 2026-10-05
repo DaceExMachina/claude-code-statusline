@@ -1,5 +1,5 @@
 #!/bin/sh
-# Line 1: ⌥ branch  +N -N  ✦ model  ██▒░░ N%  ϟ N tpm
+# Line 1: # name  ⌥ branch  +N -N  ✦ model  ██▒░░ N%  ϟ N tpm
 # Line 2: 5h N% XhYm  7d N% XdYh  cache Nm   (rate limits shown when on pace / ≥75%; cache when ≤10m left or cold)
 
 TPM_WINDOW_MS=300000     # 5 minutes
@@ -120,7 +120,7 @@ esac
 safe_id=$(printf '%s' "$session_id" | tr -dc 'a-zA-Z0-9_-')
 
 # Indicators to hide, from CLAUDE_STATUSLINE_HIDE: a comma-separated list of
-# names (branch, diff, model, context, tpm, limits, cache). Spaces are
+# names (name, branch, diff, model, context, tpm, limits, cache). Spaces are
 # tolerated and unknown names are ignored. A hidden indicator also skips the
 # work behind it.
 hide_list=",$(printf '%s' "${CLAUDE_STATUSLINE_HIDE:-}" | tr -d ' '),"
@@ -538,7 +538,18 @@ if ! hidden cache && [ -n "$cache_expires" ]; then
   fi
 fi
 
-# ─── Line 1: branch, diff, model, context, tpm ───
+# Session name, e.g. "extension-69". Claude Code's statusline JSON only carries
+# a name the user set or the AI generated, not the default one that peer
+# messaging uses, so read it from the session registry. It can change on
+# /rename, so look it up on every run. grep narrows to the one file whose
+# sessionId matches before jq parses anything.
+session_name=""
+if ! hidden name && [ -n "$safe_id" ]; then
+  registry=$(grep -l "\"sessionId\":\"$safe_id\"" "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"/sessions/*.json 2>/dev/null | head -n 1)
+  [ -n "$registry" ] && session_name=$(jq -r '.name // empty' "$registry" 2>/dev/null)
+fi
+
+# ─── Line 1: name, branch, diff, model, context, tpm ───
 
 # emit FORMAT [ARG...]: print one segment, separated from the previous one
 line1_empty=1
@@ -547,6 +558,9 @@ emit() {
   printf "$@"
 }
 
+if [ -n "$session_name" ]; then
+  emit "${dim}# %s${reset}" "$session_name"
+fi
 if ! hidden branch && [ -n "$branch" ]; then
   if [ -n "$worktree_name" ]; then
     # Worktree name (always mauve here) leads; branch trails dimmed

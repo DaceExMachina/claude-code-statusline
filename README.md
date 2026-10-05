@@ -4,7 +4,7 @@
 [![POSIX shell](https://img.shields.io/badge/Shell-POSIX-green.svg)](statusline.sh)
 [![macOS / Linux](https://img.shields.io/badge/macOS_|_Linux-compatible-lightgrey.svg)]()
 
-A minimal, configurable Claude Code statusline showing branch, diff, model, context, throughput, rate limit usage, and prompt cache state.
+A minimal, configurable Claude Code statusline showing session name, branch, diff, model, context, throughput, rate limit usage, and prompt cache state.
 
 <img width="685" alt="A calm session: branch, diff, model, context, throughput" src="screenshots/default.png" />
 
@@ -19,6 +19,7 @@ A minimal, configurable Claude Code statusline showing branch, diff, model, cont
 
 | Indicator | Description | Thresholds |
 |---|---|---|
+| **Session name** | Claude Code's name for the session (`extension-69`, or what you set with `/rename`), to tell parallel terminals apart. Read from the session registry in `~/.claude/sessions` |  |
 | **Branch** | Current git branch |  |
 | **Diff** | Uncommitted additions and deletions |  |
 | **Model** | Active Claude model |  |
@@ -78,6 +79,7 @@ Or add it to the `env` block in the same file, which the statusline inherits.
 
 | Name | Hides |
 |---|---|
+| `name` | Session name |
 | `branch` | Branch name and worktree marker |
 | `diff` | Uncommitted additions and deletions |
 | `model` | Model name and 1M marker |
