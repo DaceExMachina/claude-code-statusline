@@ -131,7 +131,7 @@ make_repo() {
 @test "hide: name hides the session name" {
   make_registry "$TEST_SID" my-session
   run run_sl
-  [[ "$(plain)" == "# my-session"* ]]
+  [ "$(plain)" = "# my-session  ✦ Opus 4.6  █░░░░ 25%" ]
   CLAUDE_STATUSLINE_HIDE=name run run_sl
-  [[ "$(plain)" != *"my-session"* ]]
+  [ "$(plain)" = "✦ Opus 4.6  █░░░░ 25%" ]
 }

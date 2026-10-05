@@ -12,10 +12,10 @@ load 'helpers'
 @test "name: reads the registry fresh on every run" {
   make_registry "$TEST_SID" extension-69
   run run_sl
-  [[ "$(plain)" == "# extension-69"* ]]
+  [ "$(plain)" = "# extension-69  ✦ Opus 4.6  █░░░░ 25%" ]
   make_registry "$TEST_SID" renamed
   run run_sl
-  [[ "$(plain)" == "# renamed"* ]]
+  [ "$(plain)" = "# renamed  ✦ Opus 4.6  █░░░░ 25%" ]
 }
 
 @test "name: no matching registry file shows nothing" {
