@@ -19,7 +19,7 @@ A minimal, configurable Claude Code statusline showing session name, branch, dif
 
 | Indicator | Description | Thresholds |
 |---|---|---|
-| **Session name** | Claude Code's name for the session (`extension-69`, or what you set with `/rename`), to tell parallel terminals apart. Read from the session registry in `~/.claude/sessions` |  |
+| **Session name** | Claude Code's name for the session (`extension-69`, or what you set with `/rename`), to tell parallel terminals apart. Read from the session registry in `${CLAUDE_CONFIG_DIR:-~/.claude}/sessions`, so a rename shows up on the next statusline refresh. Middle-truncated past 19 characters |  |
 | **Branch** | Current git branch |  |
 | **Diff** | Uncommitted additions and deletions |  |
 | **Model** | Active Claude model |  |

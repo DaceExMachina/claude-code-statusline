@@ -4,7 +4,7 @@
 
 ### Added
 
-- Show the session name (`extension-69`, or the `/rename` name) at the start of line 1 so parallel sessions are easy to tell apart. Read fresh each run from the registry in `${CLAUDE_CONFIG_DIR:-~/.claude}/sessions`, since the statusline JSON omits Claude Code's default name. Hide it with `name` in `CLAUDE_STATUSLINE_HIDE`
+- Show the session name (`extension-69`, or the `/rename` name) at the start of line 1 so parallel sessions are easy to tell apart. Read fresh each run (a rename shows up on the next statusline refresh, not instantly) from the registry in `${CLAUDE_CONFIG_DIR:-~/.claude}/sessions`, since the statusline JSON omits Claude Code's default name. Hide it with `name` in `CLAUDE_STATUSLINE_HIDE`
 
 ## 1.8.0
 

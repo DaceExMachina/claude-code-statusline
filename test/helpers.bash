@@ -27,11 +27,11 @@ cleanup_state() {
 }
 
 # Write a Claude Code session registry file, <config dir>/sessions/<pid>.json
-# Args: session_id name [pid]
+# Args: session_id name [pid] [updatedAt]
 make_registry() {
   mkdir -p "$CLAUDE_CONFIG_DIR/sessions"
-  printf '{"pid":%s,"sessionId":"%s","name":"%s","nameSource":"derived"}' \
-    "${3:-0}" "$1" "$2" > "$CLAUDE_CONFIG_DIR/sessions/${3:-0}.json"
+  printf '{"pid":%s,"sessionId":"%s","name":"%s","nameSource":"derived","updatedAt":%s}' \
+    "${3:-0}" "$1" "$2" "${4:-0}" > "$CLAUDE_CONFIG_DIR/sessions/${3:-0}.json"
 }
 
 # Create a git repo with one commit at $TEST_GIT_REPO ($1 = branch, default main)

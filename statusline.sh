@@ -541,13 +541,13 @@ fi
 # Session name, e.g. "extension-69". Claude Code's statusline JSON only carries
 # a name the user set or the AI generated, not the default one that peer
 # messaging uses, so read it from the session registry. It can change on
-# /rename, so look it up on every run. grep narrows to the files whose
-# sessionId matches before jq parses anything; a crashed pid's leftover file
-# can share the id with a resumed one, so the newest wins.
+# /rename, so look it up on every run. grep narrows to the records whose
+# sessionId matches before jq parses anything; a crashed pid's leftover record
+# can share the id with a resumed one, so the newest updatedAt wins.
 session_name=""
 if ! hidden name && [ -n "$safe_id" ]; then
-  registry=$(grep -l "\"sessionId\":\"$safe_id\"" "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"/sessions/*.json 2>/dev/null | xargs ls -t 2>/dev/null | head -n 1)
-  [ -n "$registry" ] && session_name=$(jq -r '.name // empty' "$registry" 2>/dev/null)
+  session_name=$(grep -h "\"sessionId\":\"$safe_id\"" "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"/sessions/*.json 2>/dev/null | jq -rn '[inputs] | max_by(.updatedAt) | .name // empty' 2>/dev/null)
+  session_name=$(middle_truncate "$session_name")
 fi
 
 # ─── Line 1: name, branch, diff, model, context, tpm ───
