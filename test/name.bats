@@ -30,3 +30,15 @@ load 'helpers'
   [ "$status" -eq 0 ]
   [ "$(plain)" = "✦ Opus 4.6  █░░░░ 25%" ]
 }
+
+@test "name: the most recently modified registry file wins for a shared session id" {
+  make_registry "$TEST_SID" stale 1
+  make_registry "$TEST_SID" resumed 2
+  touch -t 202001010000 "$CLAUDE_CONFIG_DIR/sessions/1.json"
+  run run_sl
+  [ "$(plain)" = "# resumed  ✦ Opus 4.6  █░░░░ 25%" ]
+  touch -t 202001010000 "$CLAUDE_CONFIG_DIR/sessions/2.json"
+  touch -t 202101010000 "$CLAUDE_CONFIG_DIR/sessions/1.json"
+  run run_sl
+  [ "$(plain)" = "# stale  ✦ Opus 4.6  █░░░░ 25%" ]
+}

@@ -3,6 +3,7 @@
 SCRIPT="$BATS_TEST_DIRNAME/../statusline.sh"
 
 setup() {
+  export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/config"
   TEST_SID="bats-$$-${BATS_TEST_NUMBER}"
   cleanup_state "$TEST_SID"
   cleanup_state "${TEST_SID}-a"
@@ -28,7 +29,6 @@ cleanup_state() {
 # Write a Claude Code session registry file, <config dir>/sessions/<pid>.json
 # Args: session_id name [pid]
 make_registry() {
-  export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/config"
   mkdir -p "$CLAUDE_CONFIG_DIR/sessions"
   printf '{"pid":%s,"sessionId":"%s","name":"%s","nameSource":"derived"}' \
     "${3:-0}" "$1" "$2" > "$CLAUDE_CONFIG_DIR/sessions/${3:-0}.json"
