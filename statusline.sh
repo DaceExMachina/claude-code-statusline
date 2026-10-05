@@ -1,5 +1,5 @@
 #!/bin/sh
-# Line 1: # name  ⌥ branch  +N -N  ✦ model  ██▒░░ N%  ϟ N tpm
+# Line 1: (# name, opt-in)  ⌥ branch  +N -N  ✦ model  ██▒░░ N%  ϟ N tpm
 # Line 2: 5h N% XhYm  7d N% XdYh  cache Nm   (rate limits shown when on pace / ≥75%; cache when ≤10m left or cold)
 
 TPM_WINDOW_MS=300000     # 5 minutes
@@ -120,12 +120,18 @@ esac
 safe_id=$(printf '%s' "$session_id" | tr -dc 'a-zA-Z0-9_-')
 
 # Indicators to hide, from CLAUDE_STATUSLINE_HIDE: a comma-separated list of
-# names (name, branch, diff, model, context, tpm, limits, cache). Spaces are
+# names (branch, diff, model, context, tpm, limits, cache). Spaces are
 # tolerated and unknown names are ignored. A hidden indicator also skips the
-# work behind it.
+# work behind it. Opt-in indicators (session) are listed the same way in
+# CLAUDE_STATUSLINE_SHOW.
 hide_list=",$(printf '%s' "${CLAUDE_STATUSLINE_HIDE:-}" | tr -d ' '),"
+show_list=",$(printf '%s' "${CLAUDE_STATUSLINE_SHOW:-}" | tr -d ' '),"
 hidden() {
   case "$hide_list" in *,"$1",*) return 0 ;; esac
+  return 1
+}
+shown() {
+  case "$show_list" in *,"$1",*) return 0 ;; esac
   return 1
 }
 
@@ -545,7 +551,7 @@ fi
 # sessionId matches before jq parses anything; a crashed pid's leftover record
 # can share the id with a resumed one, so the newest updatedAt wins.
 session_name=""
-if ! hidden name && [ -n "$safe_id" ]; then
+if shown session && [ -n "$safe_id" ]; then
   session_name=$(grep -h "\"sessionId\":\"$safe_id\"" "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"/sessions/*.json 2>/dev/null | jq -rn '[inputs] | max_by(.updatedAt) | .name // empty' 2>/dev/null)
   session_name=$(middle_truncate "$session_name")
 fi

@@ -4,7 +4,7 @@
 [![POSIX shell](https://img.shields.io/badge/Shell-POSIX-green.svg)](statusline.sh)
 [![macOS / Linux](https://img.shields.io/badge/macOS_|_Linux-compatible-lightgrey.svg)]()
 
-A minimal, configurable Claude Code statusline showing session name, branch, diff, model, context, throughput, rate limit usage, and prompt cache state.
+A minimal, configurable Claude Code statusline showing branch, diff, model, context, throughput, rate limit usage, and prompt cache state.
 
 <img width="685" alt="A calm session: branch, diff, model, context, throughput" src="screenshots/default.png" />
 
@@ -19,7 +19,7 @@ A minimal, configurable Claude Code statusline showing session name, branch, dif
 
 | Indicator | Description | Thresholds |
 |---|---|---|
-| **Session name** | Claude Code's name for the session (`extension-69`, or what you set with `/rename`), to tell parallel terminals apart. Read from the session registry in `${CLAUDE_CONFIG_DIR:-~/.claude}/sessions`, so a rename shows up on the next statusline refresh. Middle-truncated past 19 characters |  |
+| **Session name** | Opt-in, see [Configuration](#configuration). Claude Code's name for the session (`extension-69`, or what you set with `/rename`), to tell parallel terminals apart. Read from the session registry in `${CLAUDE_CONFIG_DIR:-~/.claude}/sessions`, so a rename shows up on the next statusline refresh. Middle-truncated past 19 characters |  |
 | **Branch** | Current git branch |  |
 | **Diff** | Uncommitted additions and deletions |  |
 | **Model** | Active Claude model |  |
@@ -79,7 +79,6 @@ Or add it to the `env` block in the same file, which the statusline inherits.
 
 | Name | Hides |
 |---|---|
-| `name` | Session name |
 | `branch` | Branch name and worktree marker |
 | `diff` | Uncommitted additions and deletions |
 | `model` | Model name and 1M marker |
@@ -89,6 +88,12 @@ Or add it to the `env` block in the same file, which the statusline inherits.
 | `cache` | Prompt cache countdown and cold state |
 
 Unknown names are ignored. A hidden indicator also skips the work behind it, so hiding `diff` avoids the git diff scan and hiding `tpm` avoids reading the session transcript.
+
+Some indicators are off until you ask for them. Turn them on with `CLAUDE_STATUSLINE_SHOW`, a comma-separated list parsed the same way, set where you would set `CLAUDE_STATUSLINE_HIDE`:
+
+| Name | Shows |
+|---|---|
+| `session` | Session name, at the start of line 1 |
 
 
 ## Requirements

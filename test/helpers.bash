@@ -4,6 +4,7 @@ SCRIPT="$BATS_TEST_DIRNAME/../statusline.sh"
 
 setup() {
   export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/config"
+  unset CLAUDE_STATUSLINE_SHOW
   TEST_SID="bats-$$-${BATS_TEST_NUMBER}"
   cleanup_state "$TEST_SID"
   cleanup_state "${TEST_SID}-a"
